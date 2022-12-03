@@ -4,6 +4,7 @@ namespace Crypto\Application\Index;
 
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
+use Crypto\Domain\Entities\Crypto;
 
 class Service
 {
@@ -22,9 +23,14 @@ class Service
             'crypto.providers.coingecko.available_endpoints.list'
         );
         $queryParams = $this->getQueryParams($input->getCurrency());
-        $result = $this->client->get($endpoint, $queryParams);
+        $cryptoCurrencies = $this->client->get($endpoint, $queryParams);
+        $result = [];
 
-        return new OutputBoundary();
+        foreach ($cryptoCurrencies as $cryptoCurrency) {
+            $result[] = $this->buildCrypto($cryptoCurrency);
+        }
+
+        return new OutputBoundary($result);
     }
 
     /**
@@ -46,5 +52,21 @@ class Service
             'ids' => rtrim($ids, ','),
             'vs_currency' => $currency,
         ];
+    }
+
+    /**
+     * @param array<string, mixed> $cryptoCurrencies
+     * @return Crypto
+     */
+    private function buildCrypto(array $cryptoCurrencies): Crypto
+    {
+        return new Crypto(
+            $cryptoCurrencies['id'],
+            $cryptoCurrencies['name'],
+            $cryptoCurrencies['image'],
+            $cryptoCurrencies['current_price'],
+            $cryptoCurrencies['high_24h'],
+            $cryptoCurrencies['low_24h']
+        );
     }
 }

@@ -4,6 +4,7 @@ namespace Crypto\Domain\Entities;
 
 class Crypto
 {
+    private string $id;
     private string $name;
     private string $image;
     private string $currentPrice;
@@ -11,17 +12,24 @@ class Crypto
     private string $low24;
 
     public function __construct(
+        string $id,
         string $name,
         string $image,
         string $currentPrice,
         string $high24,
         string $low24
     ) {
+        $this->id = $id;
         $this->name = $name;
         $this->image = $image;
         $this->currentPrice = $currentPrice;
         $this->high24 = $high24;
         $this->low24 = $low24;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getName(): string

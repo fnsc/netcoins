@@ -31,7 +31,7 @@ class Client implements ClientContract
         $response = $this->client->get($url, $options);
         $content = $response->getBody();
 
-        return json_decode($content);
+        return json_decode($content, true);
     }
 
     /**
