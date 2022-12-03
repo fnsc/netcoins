@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ruleset name="Netcoins Candidate Test">
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="45"/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+
+    <!-- Ignore warnings and show progress of the run -->
+    <arg value="nps"/>
+
+    <!-- Folders that will be tracked -->
+    <file>./src</file>
+    <file>./tests</file>
+
+    <rule ref="LeroyMerlin"/>
+
+    <rule ref="Generic.Files.InlineHTML.Found">
+        <exclude-pattern>src/Presenters/GUI/*.blade.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.RequireMultiLineCall.RequiredMultiLineCall">
+        <exclude-pattern>src/Presenters/Http/Controllers/*.php</exclude-pattern>
+        <exclude-pattern>config/*.php</exclude-pattern>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
+        <exclude-pattern>src/Domain/Enums/*.php</exclude-pattern>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent.Incorrect">
+        <exclude-pattern>src/Domain/Enums/*.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter">
+        <exclude-pattern>app/*.php</exclude-pattern>
+        <exclude-pattern>database/*.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
+        <exclude-pattern>app/*.php</exclude-pattern>
+        <exclude-pattern>src/Infra/Commands/*.php</exclude-pattern>
+        <exclude-pattern>src/Infra/Models/Eloquent/*.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint">
+        <exclude-pattern>src/Presenters/CLI/*.php</exclude-pattern>
+        <exclude-pattern>src/Infra/Models/Eloquent/*.php</exclude-pattern>
+        <exclude-pattern>database/factories/*.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter">
+        <exclude-pattern>src/Infra/Models/Eloquent/Casts/*.php</exclude-pattern>
+    </rule>
+
+</ruleset>
