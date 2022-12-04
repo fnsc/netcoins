@@ -5,6 +5,7 @@ namespace Tests\Integration\Crypto\Presenters\Http\Controllers\Api;
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Price\InputBoundary;
 use Crypto\Application\Price\Service;
+use Crypto\Domain\ValueObjects\QueryParam;
 use Exception;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Response;
@@ -17,8 +18,11 @@ class PriceControllerTest extends TestCase
     public function testShouldGetCryptoPrices(): void
     {
         // Set
-        $client = $this->instance(Client::class, m::mock(Client::class));
-        $queryParams = ['ids' => 'bitcoin', 'vs_currencies' => 'usd'];
+        $client = $this->instance(Client::class, $this->createMock(Client::class));
+        $queryParams = [
+            new QueryParam('crypto-currency', 'bitcoin'),
+            new QueryParam('currency', 'usd'),
+        ];
         $clientResponse = [
             'bitcoin' => [
                 'usd' => 16961.09,
@@ -35,9 +39,10 @@ class PriceControllerTest extends TestCase
 
         // Expectations
         /** @phpstan-ignore-next-line  */
-        $client->expects()
-            ->get('simple/price', $queryParams)
-            ->andReturn($clientResponse);
+        $client->expects($this->once())
+            ->method('getPrice')
+            ->with($queryParams)
+            ->willReturn($clientResponse);
 
         // Action
         $result = $this->get('api/v1/crypto/price?crypto-currency=bitcoin');

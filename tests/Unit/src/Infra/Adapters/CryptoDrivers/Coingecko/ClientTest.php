@@ -1,6 +1,6 @@
 <?php
 
-namespace Crypto\Infra\Adapters;
+namespace Crypto\Infra\Adapters\CryptoDrivers\Coingecko;
 
 use Crypto\Application\Contracts\Config as configContract;
 use GuzzleHttp\Client as HttpClient;
@@ -48,8 +48,13 @@ class ClientTest extends TestCase
             ->andReturn('http://localhost');
 
         /** @phpstan-ignore-next-line  */
+        $config->expects()
+            ->get('crypto.providers.coingecko.available_endpoints.list')
+            ->andReturn('list/endpoint');
+
+        /** @phpstan-ignore-next-line  */
         $httpClient->expects()
-            ->get('http://localhost/some/random/endpoint?', $options)
+            ->get('http://localhost/list/endpoint?', $options)
             ->andReturn($response);
 
         /** @phpstan-ignore-next-line  */
@@ -63,7 +68,7 @@ class ClientTest extends TestCase
             ->andReturn(json_encode($expected));
 
         // Action
-        $result = $client->get('some/random/endpoint', []);
+        $result = $client->list([]);
 
         // Assertions
         $this->assertSame($expected, $result);

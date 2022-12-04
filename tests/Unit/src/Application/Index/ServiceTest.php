@@ -5,6 +5,7 @@ namespace Crypto\Application\Index;
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
 use Crypto\Domain\Entities\Crypto;
+use Crypto\Domain\ValueObjects\QueryParam;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
@@ -13,12 +14,17 @@ class ServiceTest extends TestCase
     public function testShouldHandle(): void
     {
         // Set
-        $client = m::mock(Client::class);
+        $client = $this->createMock(Client::class);
         $config = m::mock(Config::class);
         /** @phpstan-ignore-next-line  */
         $service = new Service($client, $config);
 
         $input = new InputBoundary('usd');
+
+        $queryParams = [
+            new QueryParam('crypto-currency', 'bitcoin'),
+            new QueryParam('currency', 'usd'),
+        ];
 
         // Expectations
         /** @phpstan-ignore-next-line  */
@@ -31,13 +37,10 @@ class ServiceTest extends TestCase
             ->get('crypto.supported_crypto_currencies')
             ->andReturn(['bitcoin']);
 
-        /** @phpstan-ignore-next-line  */
-        $client->expects()
-            ->get(
-                'provider/list/endpoint',
-                ['ids' => 'bitcoin', 'vs_currency' => 'usd']
-            )
-            ->andReturn([
+        $client->expects($this->once())
+            ->method('list')
+            ->with($queryParams)
+            ->willReturn([
                 [
                     'id' => 'bitcoin',
                     'name' => 'Bitcoin',

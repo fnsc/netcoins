@@ -2,12 +2,19 @@
 
 namespace Crypto\Application\Contracts;
 
+use Crypto\Domain\ValueObjects\QueryParam;
+
 interface Client
 {
     /**
-     * @param string                $endpoint
-     * @param array<string, string> $queryParams
+     * @param array<QueryParam> $queryParams
      * @return array<string, mixed>
      */
-    public function get(string $endpoint, array $queryParams): array;
+    public function list(array $queryParams): array;
+
+    /**
+     * @param array<QueryParam> $queryParams
+     * @return array<string, mixed>
+     */
+    public function getPrice(array $queryParams): array;
 }
