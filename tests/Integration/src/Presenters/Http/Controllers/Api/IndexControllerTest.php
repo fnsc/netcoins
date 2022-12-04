@@ -1,10 +1,10 @@
 <?php
 
-namespace Integration\Presenters\Http\Controllers\Api;
+namespace Tests\Integration\Crypto\Presenters\Http\Controllers\Api;
 
 use Crypto\Application\Contracts\Client;
-use Crypto\Application\Price\InputBoundary;
-use Crypto\Application\Price\Service;
+use Crypto\Application\Index\InputBoundary;
+use Crypto\Application\Index\Service;
 use Exception;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Response;
@@ -12,35 +12,45 @@ use Mockery as m;
 use Tests\TestCase;
 use Throwable;
 
-class PriceControllerTest extends TestCase
+class IndexControllerTest extends TestCase
 {
-    public function testShouldGetCryptoPrices(): void
+    public function testShouldReceiveTheCryptoCurrencies(): void
     {
         // Set
         $client = $this->instance(Client::class, m::mock(Client::class));
-        $queryParams = ['ids' => 'bitcoin', 'vs_currencies' => 'usd'];
+        $queryParams = ['ids' => 'bitcoin,litecoin,ethereum', 'vs_currency' => 'usd'];
         $clientResponse = [
-            'bitcoin' => [
-                'usd' => 16961.09,
+            [
+                'id' => 'bitcoin',
+                'name' => 'Bitcoin',
+                'image' => 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+                'current_price' => 16961.09,
+                'high_24h' => 17149.34,
+                'low_24h' => 16927.15,
             ],
         ];
 
         $expected = [
             'data' => [
-                'id' => 'bitcoin',
-                'currency' => 'usd',
-                'value' => '16961.09',
+                [
+                    'id' => 'bitcoin',
+                    'name' => 'Bitcoin',
+                    'image' => 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+                    'currentPrice' => '16961.09',
+                    'high24' => '17149.34',
+                    'low24' => '16927.15',
+                ],
             ],
         ];
 
         // Expectations
         /** @phpstan-ignore-next-line  */
         $client->expects()
-            ->get('simple/price', $queryParams)
+            ->get('coins/markets', $queryParams)
             ->andReturn($clientResponse);
 
         // Action
-        $result = $this->get('api/v1/crypto/price?crypto-currency=bitcoin');
+        $result = $this->get('api/v1/crypto/list?currency=usd');
 
         // Assertions
         $result->assertStatus(Response::HTTP_OK);
@@ -53,14 +63,14 @@ class PriceControllerTest extends TestCase
         $expected = [
             'data' => [],
             'errors' => [
-                'crypto-currency' => [
-                    'The crypto-currency field is required.',
+                'currency' => [
+                    'The currency field is required.',
                 ],
             ],
         ];
 
         // Action
-        $result = $this->get('api/v1/crypto/price');
+        $result = $this->get('api/v1/crypto/list');
 
         // Assertions
         $result->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -80,7 +90,7 @@ class PriceControllerTest extends TestCase
             Service::class,
             $this->createMock(Service::class)
         );
-        $input = new InputBoundary('bitcoin');
+        $input = new InputBoundary('usd');
 
         // Expectations
         /** @phpstan-ignore-next-line  */
@@ -90,7 +100,7 @@ class PriceControllerTest extends TestCase
             ->willThrowException($exception);
 
         // Action
-        $result = $this->get('api/v1/crypto/price?crypto-currency=bitcoin');
+        $result = $this->get('api/v1/crypto/list?currency=usd');
 
         // Assertions
         $result->assertStatus($expectedStatusCode);

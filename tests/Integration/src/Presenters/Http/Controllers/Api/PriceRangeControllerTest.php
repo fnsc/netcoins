@@ -1,6 +1,6 @@
 <?php
 
-namespace Integration\Presenters\Http\Controllers\Api;
+namespace Tests\Integration\Crypto\Presenters\Http\Controllers\Api;
 
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\PriceRange\InputBoundary;

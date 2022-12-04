@@ -35,8 +35,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests",
-            "Crypto\\": "tests/Unit/src"
+            "Crypto\\": "tests/Unit/src/",
+            "Tests\\Integration\\Crypto\\": "tests/Integration/src/",
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
