@@ -3,6 +3,7 @@
 namespace Crypto\Presenters\Http\Controllers\Api;
 
 use Crypto\Application\Contracts\Config;
+use Crypto\Application\Exceptions\EmptyResponse;
 use Crypto\Application\Index\InputBoundary;
 use Crypto\Application\Index\Service;
 use Crypto\Presenters\Http\Controllers\AbstractController;
@@ -69,6 +70,13 @@ class IndexController extends AbstractController
             return new JsonResponse([
                 'data' => [],
                 'errors' => 'Error while receiving data from the third part API. Try again later.',
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (EmptyResponse $exception) {
+            $this->logger->error('[Crypto|Index] Empty return from the third part API.', compact('exception'));
+
+            return new JsonResponse([
+                'data' => [],
+                'errors' => 'Empty return from the third part API. Try again later.',
             ], Response::HTTP_BAD_REQUEST);
         } catch (Exception $exception) {
             $this->logger->error('[Crypto|Index] Something unexpected has happened.', compact('exception'));
