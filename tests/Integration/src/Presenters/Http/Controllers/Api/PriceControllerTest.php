@@ -3,6 +3,7 @@
 namespace Tests\Integration\Crypto\Presenters\Http\Controllers\Api;
 
 use Crypto\Application\Contracts\Client;
+use Crypto\Application\Exceptions\EmptyResponse;
 use Crypto\Application\Price\InputBoundary;
 use Crypto\Application\Price\Service;
 use Crypto\Domain\ValueObjects\QueryParam;
@@ -113,6 +114,14 @@ class PriceControllerTest extends TestCase
                 'expected' => [
                     'data' => [],
                     'errors' => 'Error while receiving data from the third part API. Try again later.',
+                ],
+                'expectedStatusCode' => Response::HTTP_BAD_REQUEST,
+            ],
+            'empty response exception' => [
+                'exception' => m::mock(EmptyResponse::class),
+                'expected' => [
+                    'data' => [],
+                    'errors' => 'Empty return from the third part API. Try again later.',
                 ],
                 'expectedStatusCode' => Response::HTTP_BAD_REQUEST,
             ],

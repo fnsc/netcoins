@@ -3,6 +3,7 @@
 namespace Crypto\Presenters\Http\Controllers\Api;
 
 use Crypto\Application\Contracts\Config;
+use Crypto\Application\Exceptions\EmptyResponse;
 use Crypto\Application\PriceRange\InputBoundary;
 use Crypto\Application\PriceRange\Service;
 use Crypto\Presenters\Http\Controllers\AbstractController;
@@ -59,6 +60,13 @@ class PriceRangeController extends AbstractController
                 'data' => [],
                 'errors' => $this->getErrors($exception),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (EmptyResponse $exception) {
+            $this->logger->error('[Crypto|Price-Range] Empty return from the third part API.', compact('exception'));
+
+            return new JsonResponse([
+                'data' => [],
+                'errors' => 'Empty return from the third part API. Try again later.',
+            ], Response::HTTP_BAD_REQUEST);
         } catch (GuzzleException $exception) {
             $this->logger->error('[Crypto|Price-Range] Error while receiving data from the third part API.', compact('exception'));
 
