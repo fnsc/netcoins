@@ -6,6 +6,7 @@ return [
             'base_url' => env('CRYPTO_PROVIDER_BASE_URL', ''),
             'available_endpoints' => [
                 'list' => env('CRYPTO_PROVIDER_AVAILABLE_ENDPOINTS_LIST', ''),
+                'price' => env('CRYPTO_PROVIDER_AVAILABLE_ENDPOINTS_PRICE', ''),
             ],
         ],
     ],

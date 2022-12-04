@@ -1,6 +1,7 @@
 <?php
 
 use Crypto\Presenters\Http\Controllers\Api\IndexController;
+use Crypto\Presenters\Http\Controllers\Api\PriceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,4 +20,5 @@ Route::group([
     'as' => 'api.crypto',
 ], function () {
     Route::get('/list', [IndexController::class, 'index'])->name('.index');
+    Route::get('/price', [PriceController::class, 'price'])->name('.price');
 });
