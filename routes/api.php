@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use Crypto\Presenters\Http\Controllers\Api\IndexController;
+use Crypto\Presenters\Http\Controllers\Api\PriceController;
+use Crypto\Presenters\Http\Controllers\Api\PriceRangeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'prefix' => 'v1/crypto',
+    'as' => 'api.crypto',
+], function () {
+    Route::get('/list', [IndexController::class, 'index'])->name('.index');
+    Route::get('/price', [PriceController::class, 'price'])->name('.price');
+    Route::get(
+        '/24h-price-range',
+        [PriceRangeController::class, 'priceRange']
+    )->name('.price-range');
 });

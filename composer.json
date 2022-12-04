@@ -5,30 +5,38 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "7.4",
+        "php": "7.4.*",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "ext-json": "*"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
+        "leroy-merlin-br/coding-standard": "^3.1",
+        "mockery/mockery": "^1.5",
         "nunomaduro/collision": "^5.10",
+        "phpro/grumphp": "^1.13",
+        "phpstan/phpstan": "^1.9",
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
+            "Crypto\\": "src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
         "psr-4": {
+            "Crypto\\": "tests/Unit/src/",
+            "Tests\\Integration\\Crypto\\": "tests/Integration/src/",
             "Tests\\": "tests/"
         }
     },
@@ -55,7 +63,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpro/grumphp": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
