@@ -5,6 +5,7 @@ namespace Crypto\Application\Price;
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
 use Crypto\Domain\Entities\Price;
+use Crypto\Domain\ValueObjects\QueryParam;
 
 class Service
 {
@@ -19,11 +20,8 @@ class Service
 
     public function handle(InputBoundary $input): OutputBoundary
     {
-        $endpoint = $this->config->get(
-            'crypto.providers.coingecko.available_endpoints.price'
-        );
         $queryParams = $this->getQueryParams($input->getCryptoCurrency());
-        $cryptoPrices = $this->client->get($endpoint, $queryParams);
+        $cryptoPrices = $this->client->getPrice($queryParams);
 
         foreach ($cryptoPrices as $key => $cryptoPrice) {
             $price = $this->buildPrice($key, $cryptoPrice);
@@ -35,18 +33,18 @@ class Service
 
     /**
      * @param string $cryptoCurrency
-     * @return array<string, string>
+     * @return array<QueryParam>
      */
     private function getQueryParams(string $cryptoCurrency): array
     {
-        $currency = $this->config->get(
-            'crypto.available_currencies'
-        );
+        $result = [];
+        $currency = current($this->config
+            ->get('crypto.available_currencies')) ?? '';
 
-        return [
-            'ids' => $cryptoCurrency,
-            'vs_currencies' => current($currency),
-        ];
+        $result[] = new QueryParam('crypto-currency', $cryptoCurrency);
+        $result[] = new QueryParam('currency', $currency);
+
+        return $result;
     }
 
     /**

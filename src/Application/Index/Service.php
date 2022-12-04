@@ -5,6 +5,7 @@ namespace Crypto\Application\Index;
 use Crypto\Application\AbstractService;
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
+use Crypto\Domain\ValueObjects\QueryParam;
 
 class Service extends AbstractService
 {
@@ -19,11 +20,8 @@ class Service extends AbstractService
 
     public function handle(InputBoundary $input): OutputBoundary
     {
-        $endpoint = $this->config->get(
-            'crypto.providers.coingecko.available_endpoints.list'
-        );
         $queryParams = $this->getQueryParams($input->getCurrency());
-        $cryptoCurrencies = $this->client->get($endpoint, $queryParams);
+        $cryptoCurrencies = $this->client->list($queryParams);
         $result = [];
 
         foreach ($cryptoCurrencies as $cryptoCurrency) {
@@ -35,22 +33,24 @@ class Service extends AbstractService
 
     /**
      * @param string $currency
-     * @return array<string, string>
+     * @return array<QueryParam>
      */
     private function getQueryParams(string $currency): array
     {
-        $cryptoCurrencies = $this->config->get(
-            'crypto.supported_crypto_currencies'
-        );
-        $ids = '';
+        $queryParams = [];
+
+        $cryptoCurrencies = $this->config
+            ->get('crypto.supported_crypto_currencies');
 
         foreach ($cryptoCurrencies as $cryptoCurrency) {
-            $ids .= $cryptoCurrency . ',';
+            $queryParams[] = new QueryParam(
+                'crypto-currency',
+                $cryptoCurrency
+            );
         }
 
-        return [
-            'ids' => rtrim($ids, ','),
-            'vs_currency' => $currency,
-        ];
+        $queryParams[] = new QueryParam('currency', $currency);
+
+        return $queryParams;
     }
 }

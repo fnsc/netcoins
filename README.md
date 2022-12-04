@@ -6,6 +6,9 @@
 1. `api/v1/crypto/24h-price-range`
     1. Query param `crypto-currency` (required);
 
+## Coverage
+<p align="center"><img src="./docs/img/coverage.png" alt="Coverage Report"><p>
+
 ## Stack
 - [PHP 7.4](https://www.php.net);
 - [Laravel](https://laravel.com);

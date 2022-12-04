@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'driver' => env('CRYPTO_DRIVER', 'coingecko'),
+
     'providers' => [
         'coingecko' => [
             'base_url' => env('CRYPTO_PROVIDER_BASE_URL', ''),
