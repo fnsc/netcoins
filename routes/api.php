@@ -2,6 +2,7 @@
 
 use Crypto\Presenters\Http\Controllers\Api\IndexController;
 use Crypto\Presenters\Http\Controllers\Api\PriceController;
+use Crypto\Presenters\Http\Controllers\Api\PriceRangeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,8 @@ Route::group([
 ], function () {
     Route::get('/list', [IndexController::class, 'index'])->name('.index');
     Route::get('/price', [PriceController::class, 'price'])->name('.price');
+    Route::get(
+        '/24h-price-range',
+        [PriceRangeController::class, 'priceRange']
+    )->name('.price-range');
 });

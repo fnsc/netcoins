@@ -1,6 +1,6 @@
 <?php
 
-namespace Crypto\Application\Index;
+namespace Crypto\Application\PriceRange;
 
 use Crypto\Application\AbstractService;
 use Crypto\Application\Contracts\Client;
@@ -22,35 +22,31 @@ class Service extends AbstractService
         $endpoint = $this->config->get(
             'crypto.providers.coingecko.available_endpoints.list'
         );
-        $queryParams = $this->getQueryParams($input->getCurrency());
+        $queryParams = $this->getQueryParams($input->getCryptoCurrency());
         $cryptoCurrencies = $this->client->get($endpoint, $queryParams);
-        $result = [];
+        $result = null;
 
         foreach ($cryptoCurrencies as $cryptoCurrency) {
-            $result[] = $this->buildCrypto($cryptoCurrency);
+            $result = $this->buildCrypto($cryptoCurrency);
         }
 
+        /** @phpstan-ignore-next-line  */
         return new OutputBoundary($result);
     }
 
     /**
-     * @param string $currency
+     * @param string $cryptoCurrency
      * @return array<string, string>
      */
-    private function getQueryParams(string $currency): array
+    private function getQueryParams(string $cryptoCurrency): array
     {
-        $cryptoCurrencies = $this->config->get(
-            'crypto.supported_crypto_currencies'
+        $currency = $this->config->get(
+            'crypto.available_currencies'
         );
-        $ids = '';
-
-        foreach ($cryptoCurrencies as $cryptoCurrency) {
-            $ids .= $cryptoCurrency . ',';
-        }
 
         return [
-            'ids' => rtrim($ids, ','),
-            'vs_currency' => $currency,
+            'ids' => $cryptoCurrency,
+            'vs_currency' => (string) current($currency),
         ];
     }
 }
