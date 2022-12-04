@@ -165,6 +165,8 @@ return [
         /*
          * Package Service Providers...
          */
+        Crypto\Infra\Providers\ClientServiceProvider::class,
+        Crypto\Infra\Providers\ConfigServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -15,9 +15,6 @@ jobs:
       - name: Run Code Standards
         run: docker-compose run --rm -T web vendor/bin/phpcs
 
-      - name: Create Laravel Settings
-        run: docker-compose run --rm -T web cp .env.example .env && docker-compose run --rm -T web php artisan key:generate
-
       - name: Run Unit Tests
         run: docker-compose run --rm -T web vendor/bin/phpunit tests/Unit
 
