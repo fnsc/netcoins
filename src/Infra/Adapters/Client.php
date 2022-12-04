@@ -29,7 +29,7 @@ class Client implements ClientContract
         $url = $this->buildUrl($endpoint, $queryParams);
         $options = $this->getOptions();
         $response = $this->client->get($url, $options);
-        $content = $response->getBody();
+        $content = $response->getBody()->getContents();
 
         return json_decode($content, true);
     }
