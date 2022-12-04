@@ -5,6 +5,7 @@ namespace Crypto\Application\PriceRange;
 use Crypto\Application\AbstractService;
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
+use Crypto\Application\Exceptions\EmptyResponse;
 use Crypto\Domain\ValueObjects\QueryParam;
 
 class Service extends AbstractService
@@ -28,7 +29,12 @@ class Service extends AbstractService
             $result = $this->buildCrypto($cryptoCurrency);
         }
 
-        /** @phpstan-ignore-next-line  */
+        if (empty($result)) {
+            throw new EmptyResponse(
+                'Empty result from the third part service.'
+            );
+        }
+
         return new OutputBoundary($result);
     }
 

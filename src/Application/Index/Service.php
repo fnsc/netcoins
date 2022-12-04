@@ -5,6 +5,7 @@ namespace Crypto\Application\Index;
 use Crypto\Application\AbstractService;
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
+use Crypto\Application\Exceptions\EmptyResponse;
 use Crypto\Domain\ValueObjects\QueryParam;
 
 class Service extends AbstractService
@@ -26,6 +27,12 @@ class Service extends AbstractService
 
         foreach ($cryptoCurrencies as $cryptoCurrency) {
             $result[] = $this->buildCrypto($cryptoCurrency);
+        }
+
+        if (empty($result)) {
+            throw new EmptyResponse(
+                'Empty result from the third part service.'
+            );
         }
 
         return new OutputBoundary($result);

@@ -4,6 +4,7 @@ namespace Crypto\Application\Price;
 
 use Crypto\Application\Contracts\Client;
 use Crypto\Application\Contracts\Config;
+use Crypto\Application\Exceptions\EmptyResponse;
 use Crypto\Domain\Entities\Price;
 use Crypto\Domain\ValueObjects\QueryParam;
 
@@ -22,12 +23,18 @@ class Service
     {
         $queryParams = $this->getQueryParams($input->getCryptoCurrency());
         $cryptoPrices = $this->client->getPrice($queryParams);
+        $price = null;
 
         foreach ($cryptoPrices as $key => $cryptoPrice) {
             $price = $this->buildPrice($key, $cryptoPrice);
         }
 
-        /** @phpstan-ignore-next-line  */
+        if (empty($price)) {
+            throw new EmptyResponse(
+                'Empty result from the third part service.'
+            );
+        }
+
         return new OutputBoundary($price);
     }
 
