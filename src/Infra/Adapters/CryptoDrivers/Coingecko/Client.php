@@ -54,6 +54,16 @@ class Client implements ClientContract
     }
 
     /**
+     * @param array<QueryParam> $queryParams
+     * @return array<string, mixed>
+     * @throws GuzzleException
+     */
+    public function getPriceRange(array $queryParams): array
+    {
+        return $this->list($queryParams);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function getOptions(): array
