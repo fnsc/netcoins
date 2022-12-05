@@ -19,11 +19,11 @@ class ServiceTest extends TestCase
         /** @phpstan-ignore-next-line  */
         $service = new Service($client, $config);
 
-        $input = new InputBoundary('usd');
+        $input = new InputBoundary('bitcoin');
 
         $queryParams = [
-            new QueryParam('crypto-currency', 'bitcoin'),
             new QueryParam('currency', 'usd'),
+            new QueryParam('crypto-currency', 'bitcoin'),
         ];
 
         // Expectations
@@ -34,8 +34,8 @@ class ServiceTest extends TestCase
 
         /** @phpstan-ignore-next-line  */
         $config->expects()
-            ->get('crypto.supported_crypto_currencies')
-            ->andReturn(['bitcoin']);
+            ->get('crypto.available_currencies')
+            ->andReturn(['usd']);
 
         $client->expects($this->once())
             ->method('getPriceRange')
@@ -58,7 +58,7 @@ class ServiceTest extends TestCase
         $this->assertInstanceOf(OutputBoundary::class, $result);
         $this->assertInstanceOf(
             Crypto::class,
-            current($result->getCrypto())
+            $result->getCrypto()
         );
     }
 }
