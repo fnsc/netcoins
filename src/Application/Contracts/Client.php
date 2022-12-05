@@ -17,4 +17,10 @@ interface Client
      * @return array<string, mixed>
      */
     public function getPrice(array $queryParams): array;
+
+    /**
+     * @param array<QueryParam> $queryParams
+     * @return array<string, mixed>
+     */
+    public function getPriceRange(array $queryParams): array;
 }

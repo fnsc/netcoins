@@ -46,7 +46,7 @@ class PriceRangeControllerTest extends TestCase
         // Expectations
         /** @phpstan-ignore-next-line  */
         $client->expects($this->once())
-            ->method('list')
+            ->method('getPriceRange')
             ->with($queryParams)
             ->willReturn($clientResponse);
 

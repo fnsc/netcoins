@@ -22,7 +22,7 @@ class Service extends AbstractService
     public function handle(InputBoundary $input): OutputBoundary
     {
         $queryParams = $this->getQueryParams($input->getCryptoCurrency());
-        $cryptoCurrencies = $this->client->list($queryParams);
+        $cryptoCurrencies = $this->client->getPriceRange($queryParams);
         $result = null;
 
         foreach ($cryptoCurrencies as $cryptoCurrency) {
