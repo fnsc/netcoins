@@ -6,14 +6,12 @@ USER root:root
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN apt-get update && apt-get install git vim zip unzip curl \
+RUN apt-get update && apt-get install git zip unzip curl \
     libicu-dev libssl-dev libpq-dev libpng-dev libzip-dev -y \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install intl bcmath \
     && apt-get clean
 
-RUN pecl install xdebug mongodb \
-    && docker-php-ext-enable xdebug mongodb \
+RUN pecl install xdebug-2.9.2 \
+    && docker-php-ext-enable xdebug \
     && rm -rf /tmp/*
 
 ARG UID=1000
